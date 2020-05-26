@@ -1,0 +1,42 @@
+# 236. Lowest Common Ancestor of a Binary Tree
+## 思路
+如果当前根节点为空或者等于p或者q，返回根节点。
+***通过分治法获得左右子树节点信息***
+如果左右子树均不为空，说明左右子树分别拥有p和q，那么当前根节点即为公共祖先；
+如果仅左子树不为空，说明p或q在左子树，返回左节点；
+如果仅右子树不为空，说明p或q在右子树，返回左节点；
+
+## 代码
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null||root==p||root==q){
+            return root;
+        }
+//         if(root.left==null&&root.right==null){
+//             if((root==p)||(root==q)){
+//                 return root;
+//             }
+//             return null;
+//         }
+        
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+        
+        if(left!=null&&right!=null){
+            return root;
+        }
+       
+        if(left!=null){
+            return left;
+        
+        }
+        if(right!=null){
+            return right;
+        }
+        
+        return null;
+    }
+}
+```
+

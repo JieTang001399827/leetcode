@@ -1,0 +1,78 @@
+# 144. Binary Tree Preorder Traversal
+***首先明确这是一个二叉树的问题，那么可以考虑整棵树在这个问题上的结果和左右子树在这个问题上的结果有何联系，是否可以先求左右子树***
+### 树的问题一般考虑DFS深度优先搜索，可以用递归或者迭代来实现
+## 方法一：普通递归/遍历法
+首先明确递归的三要素
+* 递归的定义
+* 递归的拆解
+* 递归的出口
+* 递归的调用（可以不算进要素）
+
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        ArrayList<Integer> res=new ArrayList<Integer>();
+        preorder(root, res);
+        return res;
+    }
+    private void preorder(TreeNode node, ArrayList<Integer> res){
+        if(node==null){
+            return; 
+        }
+        res.add(node.val);
+        preorder(node.left, res);
+        preorder(node.right,res);
+    }
+}
+```
+
+## 方法二：迭代
+用到栈的临时存储
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        Stack<TreeNode> stack=new Stack<>();
+        ArrayList<Integer> preorder = new ArrayList<Integer>();
+        if(root==null){
+            return preorder;
+        }
+        stack.push(root); 
+        while(!stack.empty())
+        {
+            TreeNode tmp=stack.pop();
+            preorder.add(tmp.val);
+            if(tmp.right!=null){
+                stack.push(tmp.right);
+            }
+            if(tmp.left!=null){
+                stack.push(tmp.left);
+            }  
+        }
+        return preorder;
+    }
+}
+```
+**时间复杂度低，空间复杂度高**
+
+## 方法三：分治法（递归）
+将一件事情分为A，B。让A去做一件事情，B去做另一件事情，最后两个结果汇总。
+```java
+class Solution {
+    public ArrayList<Integer> preorderTraversal(TreeNode root) {
+        ArrayList<Integer> res=new ArrayList<>();
+        if(root==null){
+            return res;
+        }
+        ArrayList<Integer> left=preorderTraversal(root.left);
+        ArrayList<Integer> right=preorderTraversal(root.right); 
+        res.add(root.val);
+        res.addAll(left);
+        res.addAll(right);
+        return res;
+    }
+}
+```
+
+## 方法一和方法三两种递归的区别：
++ 方法一用了一个共享的res，res作为参数，每次递归无返回值
++ 方法三每次都新建一个res，res存在于返回值里

@@ -1,0 +1,59 @@
+# 1120. Maximum Average Subtree
+***要求求出最大的子树平均值***
+如果需要求平均值，那么就必须先求出每个节点对应子树的sum(子树和)，和对应子树的size(节点个数)。
+### sum怎么求：
+该节点的sum=该节点的值+左子树的sum+右子树的sum
+### size怎么求：
+该节点的size=左子树的size+右子树的size+1(因为要包括该节点)
+### 具体步骤：
+第一想法是分治法，就是把问题分为两部分，左子树和右子树，进行解答，如果能求出左子树的sum和右子树的sum，父节点的sum就可以求出来了，size同理。
+为了方便，创建一个类SumAndSize，构造方法中加入sum和size分别代表当前节点的*子树和*和*大小*。
+
+**为了取得最大的子树平均值，必然要将当前节点的子树平均值和目前最大的子树平均值进行比较。为了避免除数为0的情况，可以将不等式两边底数互换，达到用乘法来比较的目的。**
+
+## 代码
+```java
+class Solution {
+    private class SumAndSize{
+        public int sum, size;
+        public SumAndSize(int sum, int size){
+            this.sum=sum;
+            this.size=size;
+        }
+    }
+    
+    private TreeNode maxAveSubtree = null;
+    private SumAndSize subtreeResult = null;
+
+    public double maximumAverageSubtree(TreeNode root) {
+        
+        helper(root);
+        SumAndSize res=subtreeResult;
+        return (double)subtreeResult.sum/subtreeResult.size;
+    }
+    private SumAndSize helper(TreeNode root){
+        if(root==null){
+            return new SumAndSize(0,0);
+        }
+        SumAndSize left = helper(root.left);
+        SumAndSize right = helper(root.right);
+        
+        SumAndSize rootResult=new SumAndSize(
+            left.sum+right.sum+root.val,
+            left.size+right.size+1
+        );
+
+        if(maxAveSubtree==null||
+          subtreeResult.sum*rootResult.size<rootResult.sum*subtreeResult.size){
+            maxAveSubtree=root;
+            subtreeResult=rootResult;
+        }
+       
+        
+        return rootResult;
+    }
+    
+}
+```
+
+

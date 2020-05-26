@@ -1,0 +1,54 @@
+# 104. Maximum Depth of Binary Tree
+***这是一道easy题，跟144题解法一样，但是更为简单，这里主要记录一下本题中遍历法和分治法的区别***
+首先贴一下代码
+## 方法一：分治法
+```java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        int res=0;
+        
+        if(root==null){
+            return res;
+        }
+        int left=maxDepth(root.left)+1;
+        int right=maxDepth(root.right)+1;
+        
+        if(left>right){
+            res=left;
+        }else{
+            res=right;
+        }
+        return res;
+    }
+}
+```
+
+## 方法二：遍历法
+*这里要注意，由于要求深度，所以需要一个全局变量比较并存储当前的深度*
+```java
+class Solution {
+    public int res;
+    public int maxDepth(TreeNode root) {
+        res=0;
+        
+        dfs(root,res+1);
+        return res;
+    }
+    private void dfs(TreeNode root,int curRes){
+        if(root==null){
+            return;
+        }
+        if(curRes>res){
+            res=curRes;
+        }
+        
+        dfs(root.left,curRes+1);
+        dfs(root.right,curRes+1);
+        
+    }
+    
+}
+```
+
+## 区别：
+可以看到，分治法在本题中比遍历法容易实现，并且不用额外创建一个全局变量，每次return的都是当前的最大深度。
